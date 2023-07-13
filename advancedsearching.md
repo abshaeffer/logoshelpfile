@@ -6,7 +6,7 @@ milestone: help.advancedsearching
 
 # Advanced Searching $10$
 
-This section documents the special term types and operators that are available in $ProductShort$ 10. Advanced search help for $ProductShort$ 9 can be found [here](../Searching/advancedsearchingL9.md).
+This section documents the special term types and operators that are available in $ProductShort$.
 
 - Single Terms
   - Plain Text Words
@@ -19,6 +19,7 @@ This section documents the special term types and operators that are available i
   - Logical Operators: `AND`, `OR`, `NOT`
   - Sequence Operators: `BEFORE`, `AFTER`
   - Proximity Operators: `IN`, `INTERSECTS`, `EQUALS`, `BEFORE` _`n`_, `AFTER` _`n`_, `WITHIN` _`n`_, `NEAR`
+  - Wildcards
 - Grouping
 - Additional Search Types and Modifiers
   - Data Type References
@@ -56,7 +57,7 @@ Select from the Search options to change how typed words are matched against res
 
 If `~Match case` ![](../../Images/case.png) is selected, then typing `God` will not match "god" with a lowercase "g."
 
-If `~Match forms` ![](../../Images/form.png) is selected, then all forms of the word will be found. As a result, typing `love` will match _love, loves, loved, loving, lover, lovers_.
+If `~Match all forms` ![](../../Images/form.png) is selected, then all forms of the word will be found. As a result, typing `love` will match _love, loves, loved, loving, lover, lovers_.
 
 > Note: This is an algorithmic process, and while it is mostly quite accurate, it will sometimes match similar words that are unrelated to the query, or may result in archaic or obscure forms of a word not being matched.
 
@@ -172,6 +173,22 @@ It will sometimes be necessary to resolve some ambiguities when using multiple t
 When typing `this OR that AND another`, the intention may be `(this OR that) AND another` or it may mean `this OR (that AND another)`. Adding the parenthesis removes the ambiguity.
 
 
+### Wildcards
+
+Wildcard symbols can be used to represent zero or more characters in a word.
+
+-	`*` represents any number of characters in a word.
+-	`?` represents a single character in a word (or zero characters at the end of a word).
+
+For example:
+
+-	`Christ*` -- finds "Christ", "Christian", "Christlike", etc.
+-	`lord?` -- finds "lord" and "lords", but not "lorded" or "lord’s".
+-	`s?n` -- finds "sin", "son",and "sun", but not "soon".
+
+> A wildcard will not match punctuation, spaces, or anything else that separates words. So, `Jesus?Christ` and `Jesus*Christ` will not return “Jesus Christ”.
+
+
 ## Keywords
 
 In addition to plain text searches (such as `Judah`), $ProductShort$ also allows users to search a specific [data type](../Glossary/datatype.md), such as `person:"Judah (patriarch)"` or `place:"Judah (kingdom)"`.
@@ -191,12 +208,12 @@ A [data type](../Glossary/datatype.md) is a kind of data, or the pattern for a r
 
 To search for a [data type reference](../Glossary/datatypereference.md), enter the name of the data type (for example `bible`), then a colon (:) and an optional data type matching operator (more below), then a string that specifies what reference you want to match (for example `Jn 3:16`). The example `bible:"Jn 3:16"` will match John 3:16 no matter how it is "spelled" in the resource: "Joh. iii, 16".
 
-Some data types allow for references to be matched with varying levels of exactness. This is specified by optional data type matching operators: `=`, `<<`, `>>`, or `~`. Each data type uses these operators differently, but in general:
+Some data types allow for references to be matched with varying levels of exactness. This is specified by optional data type matching operators: `=`, `<<`, `>>`, or `~~`. Each data type uses these operators differently, but in general:
 
-- 	`=` -- Matches the exact value.
--	`<<` -- Matches any reference wholly included in the search value (ie. Jn 3:16 and Jn 3:16b).
--	`>>` -- Matches any reference that includes the whole search value (ie. Jn 3:16 as found within Jn 3:1-21).
-- 	` ~ ` -- Match the specified reference loosely or generously (includes all results found in `<<` and `>>`).
+- 	`=` matches the exact value.
+-	`<<` matches any reference wholly included in the search value (ie. Jn 3:16 and Jn 3:16b).
+-	`>>` matches any reference that includes the whole search value (ie. Jn 3:16 as found within Jn 3:1-21).
+- 	`~~` matches the specified reference loosely or generously (includes all results found in `<<` and `>>`).
 - 	If no optional datatype matching operator is supplied, the software will determine how loose or precise the matching is.
 
 [`~Reference matching`](../Searching/referencematching.md) adjusts the specificity of the search results. 
@@ -277,7 +294,7 @@ For example, `sense:"to cure"` finds various places where curing happens. But "t
 
 - `sense:>>"to cure"` -- Finds this sense and all broader senses.
 - `sense:~"to cure"` -- Finds this sense and all narrower or broader senses.
-- `sense:="to cure"` — Finds exactly this sense.
+- `sense:="to cure"` -- Finds exactly this sense.
 
 The easiest way to specify a Sense term is to type a word into the Search box and choose a Sense term from the drop-down suggestion list, or to right-click a word in a reverse interlinear Bible and choose a Sense from the right side of the [Context menu](../Resources/contextmenu.md).
 
@@ -308,11 +325,10 @@ Term modifiers apply to the term they are attached to, to the group of terms (su
 
 ### Language
 
-To specify a language for a term, type its name in front of the term with a colon. For example, `german:die` and `english:die` are different words.
+To specify the language of a search term, type the name of the language in front of the term with a colon. For example, `french:pain` and `english:pain` are different words.
 
--	`english:die AND german:welt` -- Each modifier is attached to a specific word.
-- 	`english:(die AND welt)` -- Both terms are marked with the English language modifier.
-- 	`german:(die AND welt) AND english:(die AND welt)` -- Groups of terms are marked with different languages.
+- `french:pain AND german:brot` -- Finds texts that include both the French word "pain" and the German word "brot."
+- `french:(pain AND chair)` -- Finds texts that include the two French words, "pain" and "chair."
 
 
 ### Search Fields
